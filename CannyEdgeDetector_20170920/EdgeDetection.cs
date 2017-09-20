@@ -65,7 +65,7 @@ namespace CannyEdgeDetector_20170920
 
         private void NonMaxSuppression()
         {
-            for(int i=0;i<X;i++)
+            for (int i = 0; i < X; i++)
             {
                 for (int j = 0; j * Depth < Y; j++)
                 {
@@ -92,7 +92,7 @@ namespace CannyEdgeDetector_20170920
             double rightValue = GTMatrix[i - xVector, j - yVector].G;
             double currentValue = GTMatrix[i, j].G;
 
-            return (currentValue >= leftValue) && (currentValue >= rightValue);
+            return (currentValue > leftValue) && (currentValue > rightValue);
         }
     }
 }
