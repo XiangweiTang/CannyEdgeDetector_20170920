@@ -10,9 +10,15 @@ namespace CannyEdgeDetector_20170920
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Users\v-xianta\Downloads\Valve_original_(1).bmp";
+            string OriginalPath = @"01_Original.bmp";
+            string GaussianedPath = @"02_Gaussianed.bmp";
+            string FlatternPath = @"03_Flattern.bmp";
             ParseBmp pb = new ParseBmp();
-            pb.Test(path);
+            pb.LoadBmp(OriginalPath);
+            pb.RunGaussisanFilter(GaussianedPath);
+
+            pb.LoadBmp(GaussianedPath);
+            pb.RunFlattern(FlatternPath);
         }
     }
 }

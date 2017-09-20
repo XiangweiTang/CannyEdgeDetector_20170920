@@ -10,15 +10,15 @@ namespace CannyEdgeDetector_20170920
     {
         byte[,] Matrix;
         int X, Y;
-        int Width = 3;
+        int Depth;
         public byte[,] MaskedMatrix { get; private set; }
-        public GaussianFilter(byte[,] matrix, int width)
+        public GaussianFilter(byte[,] matrix, int depth)
         {
             Matrix = matrix;
             X = Matrix.GetLength(0);
             Y = Matrix.GetLength(1);
             MaskedMatrix = new byte[X, Y];
-            Width = width;
+            Depth = depth;
         }
 
         public void Convolution()
@@ -40,9 +40,9 @@ namespace CannyEdgeDetector_20170920
             {
                 for(int y = -2; y <= 2; y++)
                 {
-                    if (Valid(i + x, X) && Valid(j + y*Width, Y))
+                    if (Valid(i + x, X) && Valid(j + y*Depth, Y))
                     {
-                        int neigborValue = Matrix[i, j + y * Width];
+                        int neigborValue = Matrix[i, j + y * Depth];
                         int maskValue= Common.MaskMatrix[2 - x, 2 - y];
                         divisor += maskValue;
                         value += neigborValue * maskValue;

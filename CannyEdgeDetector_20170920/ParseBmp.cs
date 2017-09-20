@@ -11,7 +11,6 @@ namespace CannyEdgeDetector_20170920
     {
         private byte[] Content;
         private byte[] Header;
-        private int Size;
         private int X;
         private int Y;
         private int Depth;
@@ -19,7 +18,7 @@ namespace CannyEdgeDetector_20170920
         
         
         
-        public void Test(string path)
+        public void LoadBmp(string path)
         {
             var bmpBytes = Common.ReadBmp(path);
             Init(bmpBytes);
@@ -36,12 +35,6 @@ namespace CannyEdgeDetector_20170920
             Y = BitConverter.ToInt32(Header, 22);
             Depth = BitConverter.ToInt16(Header, 28)/8;
             Wrap();
-            GaussianFilter gf = new GaussianFilter(Matrix, Depth);
-            gf.Convolution();
-            var newMatrix = gf.MaskedMatrix;
-            var newContent = Merge(newMatrix).ToList();
-            var newBmpBytes = Header.Concat(newContent).ToArray();
-            Common.WriteBmp(newBmpBytes, "2.bmp");
         }
 
         private void Wrap()
@@ -67,12 +60,22 @@ namespace CannyEdgeDetector_20170920
             }
         }
 
-        private void RunGaussisanFilter()
+        public void RunGaussisanFilter(string outputPath)
         {
             GaussianFilter gf = new GaussianFilter(Matrix, Depth);
             gf.Convolution();
             var newContent = Merge(gf.MaskedMatrix);
-            var newBytes = Header.Concat(newContent).ToArray();
+            var newBytes = Header.Concat(newContent);
+            Common.WriteBmp(newBytes, outputPath);
+        }
+
+        public void RunFlattern(string outputPath)
+        {
+            Flattern f = new Flattern(Matrix, Depth);
+            f.RunFlattern();
+            var newContent = Merge(f.FlatternMatrix);
+            var newBytes = Header.Concat(newContent);
+            Common.WriteBmp(newBytes, outputPath);
         }
     }
 }

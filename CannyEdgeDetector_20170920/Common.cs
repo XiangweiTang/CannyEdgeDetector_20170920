@@ -30,13 +30,13 @@ namespace CannyEdgeDetector_20170920
             }
         }
 
-        public static void WriteBmp(byte[] bmpContent, string bmpPath)
+        public static void WriteBmp(IEnumerable<byte> bmpContent, string bmpPath)
         {
             using(FileStream fs=new FileStream(bmpPath, FileMode.Create, FileAccess.ReadWrite))
             {
                 using(BinaryWriter bw=new BinaryWriter(fs))
                 {
-                    bw.Write(bmpContent);
+                    bw.Write(bmpContent.ToArray());
                 }
             }
         }
