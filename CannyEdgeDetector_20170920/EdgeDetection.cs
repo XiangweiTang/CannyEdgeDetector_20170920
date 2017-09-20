@@ -83,9 +83,9 @@ namespace CannyEdgeDetector_20170920
             var current = GTMatrix[i, j];
             int xVector = DirectionDict[current.T].Item1;
             int yVector = DirectionDict[current.T].Item2;
-            if (!(Common.Valid(i + xVector, X / Depth) && Common.Valid(j + yVector, Y / Depth)))
+            if (!(Common.Valid(i + xVector, X) && Common.Valid(j + yVector, Y / Depth)))
                 return false;
-            if (!(Common.Valid(i - xVector, X / Depth) && Common.Valid(j - yVector, Y / Depth)))
+            if (!(Common.Valid(i - xVector, X) && Common.Valid(j - yVector, Y / Depth)))
                 return false;
 
             double leftValue = GTMatrix[i + xVector, j + yVector].G;
