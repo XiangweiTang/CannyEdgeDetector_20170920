@@ -4,19 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CannyEdgeDetector_20170919
+namespace CannyEdgeDetector_20170920
 {
     class GaussianFilter
     {
         byte[,] Matrix;
         int X, Y;
+        int Width = 3;
         public byte[,] MaskedMatrix { get; private set; }
-        public GaussianFilter(byte[,] matrix)
+        public GaussianFilter(byte[,] matrix, int width)
         {
             Matrix = matrix;
             X = Matrix.GetLength(0);
             Y = Matrix.GetLength(1);
             MaskedMatrix = new byte[X, Y];
+            Width = width;
         }
 
         public void Convolution()
@@ -38,10 +40,12 @@ namespace CannyEdgeDetector_20170919
             {
                 for(int y = -2; y <= 2; y++)
                 {
-                    if (Valid(i + x, X) && Valid(j + y, Y))
+                    if (Valid(i + x, X) && Valid(j + y*Width, Y))
                     {
-                        value += Matrix[i + x, j + y] * Common.MaskMatrix[2 - x, 2 - y];
-                        divisor += Common.MaskMatrix[2 - x, 2 - y];
+                        int neigborValue = Matrix[i, j + y * Width];
+                        int maskValue= Common.MaskMatrix[2 - x, 2 - y];
+                        divisor += maskValue;
+                        value += neigborValue * maskValue;
                     }
                 }
             }

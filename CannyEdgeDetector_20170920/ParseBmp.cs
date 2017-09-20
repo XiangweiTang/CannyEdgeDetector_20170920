@@ -5,17 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace CannyEdgeDetector_20170919
+namespace CannyEdgeDetector_20170920
 {
     class ParseBmp
     {
-        public byte[] Content { get; private set; }
-        public byte[] Header { get; private set; }
-        public int Size { get; private set; }
-        public int X { get; private set; }
-        public int Y { get; private set; }
-        public int Width { get; private set; }
-        public byte[,] Matrix { get; private set; }
+        private byte[] Content;
+        private byte[] Header;
+        private int Size;
+        private int X;
+        private int Y;
+        private int Depth;
+        private byte[,] Matrix;
+        
         
         
         public void Test(string path)
@@ -33,24 +34,24 @@ namespace CannyEdgeDetector_20170919
             Array.Copy(bmpBytes, offset, Content, 0, Content.Length);
             X = BitConverter.ToInt32(Header, 18);
             Y = BitConverter.ToInt32(Header, 22);
-            Width = BitConverter.ToInt16(Header, 28)/8;
+            Depth = BitConverter.ToInt16(Header, 28)/8;
             Wrap();
-            GaussianFilter gf = new GaussianFilter(Matrix);
+            GaussianFilter gf = new GaussianFilter(Matrix, Depth);
             gf.Convolution();
             var newMatrix = gf.MaskedMatrix;
             var newContent = Merge(newMatrix).ToList();
             var newBmpBytes = Header.Concat(newContent).ToArray();
-            Common.WriteBmp(newBmpBytes, "1.bmp");
+            Common.WriteBmp(newBmpBytes, "2.bmp");
         }
 
         private void Wrap()
         {
-            Matrix = new byte[X, Y*Width];
+            Matrix = new byte[X, Y*Depth];
             for(int x = 0; x < X; x++)
             {
-                for(int y = 0; y < Y*Width; y++)
+                for(int y = 0; y < Y*Depth; y++)
                 {
-                    Matrix[x, y] = Content[x * Y*Width + y];
+                    Matrix[x, y] = Content[x * Y*Depth + y];
                 }
             }
         }
@@ -59,11 +60,19 @@ namespace CannyEdgeDetector_20170919
         {
             for(int x = 0; x < X; x++)
             {
-                for(int y = 0; y < Y*Width; y++)
+                for(int y = 0; y < Y*Depth; y++)
                 {
                     yield return matrix[x, y];
                 }
             }
+        }
+
+        private void RunGaussisanFilter()
+        {
+            GaussianFilter gf = new GaussianFilter(Matrix, Depth);
+            gf.Convolution();
+            var newContent = Merge(gf.MaskedMatrix);
+            var newBytes = Header.Concat(newContent).ToArray();
         }
     }
 }
