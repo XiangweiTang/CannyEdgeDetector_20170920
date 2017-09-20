@@ -40,7 +40,7 @@ namespace CannyEdgeDetector_20170920
             {
                 for(int y = -2; y <= 2; y++)
                 {
-                    if (Valid(i + x, X) && Valid(j + y*Depth, Y))
+                    if (Common.Valid(i + x, X) &&Common.Valid(j + y*Depth, Y))
                     {
                         int neigborValue = Matrix[i, j + y * Depth];
                         int maskValue= Common.MaskMatrix[2 - x, 2 - y];
@@ -50,11 +50,6 @@ namespace CannyEdgeDetector_20170920
                 }
             }
             return (divisor == 0) ? (byte)0 : Convert.ToByte(value / divisor);
-        }
-
-        private bool Valid(int i, int max)
-        {
-            return 0 <= i && i < max;
         }
     }
 }

@@ -77,5 +77,14 @@ namespace CannyEdgeDetector_20170920
             var newBytes = Header.Concat(newContent);
             Common.WriteBmp(newBytes, outputPath);
         }
+
+        public void RunIntencityGradient(string outputPath)
+        {
+            EdgeDetection ed = new EdgeDetection(Matrix, Depth);
+            ed.RunEdgeDetection();
+            var newContent = Merge(ed.EdgeMatrix);
+            var newBytes = Header.Concat(newContent);
+            Common.WriteBmp(newBytes, outputPath);
+        }
     }
 }

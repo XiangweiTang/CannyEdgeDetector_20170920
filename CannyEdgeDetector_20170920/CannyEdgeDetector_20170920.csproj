@@ -43,10 +43,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
-    <Compile Include="FindIntencityGradient.cs" />
+    <Compile Include="EdgeDetection.cs" />
     <Compile Include="Flattern.cs" />
     <Compile Include="GaussianFilter.cs" />
     <Compile Include="ParseBmp.cs" />
+    <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

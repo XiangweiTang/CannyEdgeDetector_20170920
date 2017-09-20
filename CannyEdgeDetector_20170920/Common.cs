@@ -40,5 +40,10 @@ namespace CannyEdgeDetector_20170920
                 }
             }
         }
+
+        public static bool Valid(int i, int max)
+        {
+            return 0 <= i && i < max;
+        }
     }
 }
