@@ -13,19 +13,21 @@ namespace CannyEdgeDetector_20170920
         protected int Y { get; private set; }
         protected int Depth { get; private set; }
         protected byte[,] ProcessedMatrix { get; set; }
+        protected Config Cfg { get; private set; }
         private string InputPath;
         private string OutputPath;
-        private ParseBmp Pb = new ParseBmp();
+        private ParseBmp Pb = new ParseBmp();        
 
         /// <summary>
         /// Read bmp file from the input path, and write the processed file into output path.
         /// </summary>
         /// <param name="inputPath">The path of the BMP file before process.</param>
         /// <param name="outputPath">The path of the BMP file after process.</param>
-        public ImageProcess(string inputPath, string outputPath)
+        public ImageProcess(string inputPath, string outputPath, Config cfg)
         {
             InputPath = inputPath;
             OutputPath = outputPath;
+            Cfg = cfg;
             BasicInit();
             Init();
         }

@@ -11,7 +11,7 @@ namespace CannyEdgeDetector_20170920
         Dictionary<int, Tuple<int, int>> DirectionDict = new Dictionary<int, Tuple<int, int>>();
         private Pixel[,] GTMatrix;
         
-        public EdgeDetection(string inputPath, string outputPath):base(inputPath,outputPath)
+        public EdgeDetection(string inputPath, string outputPath, Config cfg):base(inputPath,outputPath, cfg)
         {
         }
 
@@ -115,8 +115,8 @@ namespace CannyEdgeDetector_20170920
             double leftValue = GTMatrix[i + xVector, j + yVector].G;
             double rightValue = GTMatrix[i - xVector, j - yVector].G;
             double currentValue = GTMatrix[i, j].G;
-            
-            return (currentValue > leftValue) && (currentValue > rightValue);
+
+            return (currentValue - leftValue > Cfg.Threshold) && (currentValue - rightValue > Cfg.Threshold);
         }        
     }
 }

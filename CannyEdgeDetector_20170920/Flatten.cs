@@ -9,7 +9,7 @@ namespace CannyEdgeDetector_20170920
     // This class is to change 24 bit bit map into 25-bit "grey scale".
     class Flatten:ImageProcess
     {        
-        public Flatten(string inputPath, string outputPath):base(inputPath,outputPath)
+        public Flatten(string inputPath, string outputPath, Config cfg):base(inputPath,outputPath, cfg)
         {
         }
 

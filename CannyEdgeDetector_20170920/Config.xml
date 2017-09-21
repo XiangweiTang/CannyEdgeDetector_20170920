@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Root>
+  <SrcFolderPath>C:\Users\tangx\Documents\Visual Studio 2017\Projects\CannyEdgeDetector_20170920\CannyEdgeDetector_20170920\bin\Debug\src</SrcFolderPath>
+  <DstFolderPath>C:\Users\tangx\Documents\Visual Studio 2017\Projects\CannyEdgeDetector_20170920\CannyEdgeDetector_20170920\bin\Debug\dst</DstFolderPath>
+  <Threshold>1.5</Threshold>
+</Root>

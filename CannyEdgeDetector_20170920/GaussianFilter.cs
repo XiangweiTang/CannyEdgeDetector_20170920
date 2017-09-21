@@ -9,7 +9,7 @@ namespace CannyEdgeDetector_20170920
     // This class is to run Gaussian Filter
     class GaussianFilter:ImageProcess
     {
-        public GaussianFilter(string inputPath, string outputPath):base(inputPath,outputPath)
+        public GaussianFilter(string inputPath, string outputPath, Config cfg):base(inputPath,outputPath, cfg)
         {
         }
 

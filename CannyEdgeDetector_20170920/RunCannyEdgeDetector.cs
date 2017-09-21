@@ -9,50 +9,50 @@ namespace CannyEdgeDetector_20170920
 {
     class RunCannyEdgeDetector
     {
-        private string SrcFolderPath = string.Empty;
-        private string DstFolderPath = string.Empty;
+        private Config Cfg = new Config();
                 
-        public RunCannyEdgeDetector(string srcFolderPath, string dstFolderPath)
+        public RunCannyEdgeDetector(Config cfg)
         {
-            SrcFolderPath = srcFolderPath;
-            DstFolderPath = dstFolderPath;
+            Cfg = cfg;
         }
 
         public void Run()
         {
-            if (!Directory.Exists(SrcFolderPath))
+            if (!Directory.Exists(Cfg.SrcFolderPath))
             {
                 Console.WriteLine("Source folder doesn't exist.");
                 return;
             }
 
-            if (!Directory.Exists(DstFolderPath))
+            if (!Directory.Exists(Cfg.DstFolderPath))
             {
-                Directory.CreateDirectory(DstFolderPath);
+                Directory.CreateDirectory(Cfg.DstFolderPath);
             }
 
             // Process all the BMP files in the source folder.
-            DirectoryInfo srcDir = new DirectoryInfo(SrcFolderPath);
+            DirectoryInfo srcDir = new DirectoryInfo(Cfg.SrcFolderPath);
             foreach(FileInfo srcFile in srcDir.EnumerateFiles("*.bmp"))
             {
-                string originalPath = Path.Combine(DstFolderPath, "01_Original_" + srcFile.Name);
-                srcFile.CopyTo(originalPath);
-                string gaussianedPath = Path.Combine(DstFolderPath, "02_Gaussian_" + srcFile.Name);
-                string flattenedPath = Path.Combine(DstFolderPath, "03_Flattened_" + srcFile.Name);
-                string edgePath = Path.Combine(DstFolderPath, "04_Edge_" + srcFile.Name);
+                Console.WriteLine("Processing " + srcFile.Name);
+                string nameCore = srcFile.Name.Replace(srcFile.Extension, string.Empty);
+                string originalPath = Path.Combine(Cfg.DstFolderPath, nameCore + "_01_Original.bmp");
+                srcFile.CopyTo(originalPath,true);
+                string gaussianedPath = Path.Combine(Cfg.DstFolderPath, nameCore + "_02_Gaussian.bmp");
+                string flattenedPath = Path.Combine(Cfg.DstFolderPath, nameCore + "_03_Flattened.bmp");
+                string edgePath = Path.Combine(Cfg.DstFolderPath, nameCore + "_04_Edge.bmp");
                 ProcessSingleBmpFile(originalPath, gaussianedPath, flattenedPath, edgePath);
             }
         }
 
         private void ProcessSingleBmpFile(string originalPath, string gaussianedPath, string flattenedPath, string edgePath)
         {
-            GaussianFilter gf = new GaussianFilter(originalPath, gaussianedPath);
+            GaussianFilter gf = new GaussianFilter(originalPath, gaussianedPath, Cfg);
             gf.RunImageProcess();
 
-            Flatten f = new Flatten(gaussianedPath, flattenedPath);
+            Flatten f = new Flatten(gaussianedPath, flattenedPath, Cfg);
             f.RunImageProcess();
 
-            EdgeDetection ed = new EdgeDetection(flattenedPath, edgePath);
+            EdgeDetection ed = new EdgeDetection(flattenedPath, edgePath, Cfg);
             ed.RunImageProcess();
         }
     }

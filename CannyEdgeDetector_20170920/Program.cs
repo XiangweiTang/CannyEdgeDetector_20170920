@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace CannyEdgeDetector_20170920
 {
@@ -6,24 +7,33 @@ namespace CannyEdgeDetector_20170920
     {
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            string configPath = "config.xml";
+            if (args.Length > 0)
+                configPath = args[0];
+
+            if (!File.Exists(configPath))
             {
                 PrintUsage();
                 return;
             }
 
-            string srcFolderPath = args[0];
-            string dstFolderPath = args[1];
+            CannyEdgeDetector(configPath);
+        }
 
-            RunCannyEdgeDetector r = new RunCannyEdgeDetector(srcFolderPath, dstFolderPath);
+        static void CannyEdgeDetector(string configPath)
+        {
+            Config cfg = new Config();
+            if (!cfg.LoadConfig(configPath))
+                return;
+            RunCannyEdgeDetector r = new RunCannyEdgeDetector(cfg);
             r.Run();
-        }       
+        }
 
         static void PrintUsage()
         {
-            Console.WriteLine(">CannyEdgeDetector.exe <InputFolderPath> <OutputFolderPath>");
-            Console.WriteLine("\tInputFolderPath: the folder contains the BMP file before process.");
-            Console.WriteLine("\tOutputFolderPath: the folder contains the BMP file after process.");
+            Console.WriteLine(">CannyEdgeDetector.exe [ConfigPath]");
+            Console.WriteLine("\tConfigPath is the path of config.");
+            Console.WriteLine("\tThe config path can be left empty if config.xml is at the same directory.");
         }
     }
 }
