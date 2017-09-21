@@ -44,12 +44,14 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="EdgeDetection.cs" />
-    <Compile Include="Flattern.cs" />
+    <Compile Include="Flatten.cs" />
     <Compile Include="GaussianFilter.cs" />
+    <Compile Include="ImageProcess.cs" />
     <Compile Include="ParseBmp.cs" />
     <Compile Include="Pixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RunCannyEdgeDetector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

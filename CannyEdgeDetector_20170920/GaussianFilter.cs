@@ -6,33 +6,38 @@ using System.Threading.Tasks;
 
 namespace CannyEdgeDetector_20170920
 {
-    class GaussianFilter
+    // This class is to run Gaussian Filter
+    class GaussianFilter:ImageProcess
     {
-        byte[,] Matrix;
-        int X, Y;
-        int Depth;
-        public byte[,] MaskedMatrix { get; private set; }
-        public GaussianFilter(byte[,] matrix, int depth)
+        public GaussianFilter(string inputPath, string outputPath):base(inputPath,outputPath)
         {
-            Matrix = matrix;
-            X = Matrix.GetLength(0);
-            Y = Matrix.GetLength(1);
-            MaskedMatrix = new byte[X, Y];
-            Depth = depth;
         }
 
-        public void Convolution()
+        protected override void Init()
+        {
+        }
+
+        /// <summary>
+        /// Run convolutoin on all pixels.
+        /// </summary>
+        protected override void Run()
         {
             for(int i = 0; i < X; i++)
             {
-                for(int j = 0; j < Y; j++)
+                for (int j = 0; j < Y * Depth; j++)
                 {
-                    MaskedMatrix[i, j] = SetValue(i, j);
+                    ProcessedMatrix[i, j] = Convolution(i, j);
                 }
             }
         }
 
-        private byte SetValue(int i, int j)
+        /// <summary>
+        /// Calculate convolution of pixel at [i, j].
+        /// </summary>
+        /// <param name="i">i-Coordinate</param>
+        /// <param name="j">j-Coordinate</param>
+        /// <returns>The result after Convolution at [i,j]</returns>
+        private byte Convolution(int i, int j)
         {
             int value = 0;
             int divisor = 0;
@@ -40,16 +45,17 @@ namespace CannyEdgeDetector_20170920
             {
                 for(int y = -2; y <= 2; y++)
                 {
-                    if (Common.Valid(i + x, X) &&Common.Valid(j + y*Depth, Y))
+                    if (Common.Valid(i + x, X) && Common.Valid(j + y * Depth, Y * Depth))
                     {
-                        int neigborValue = Matrix[i, j + y * Depth];
-                        int maskValue= Common.MaskMatrix[2 - x, 2 - y];
+                        int neigborValue = Matrix[i + x, j + y * Depth];
+                        int maskValue = Common.MaskMatrix[2 - x, 2 - y];
                         divisor += maskValue;
                         value += neigborValue * maskValue;
                     }
                 }
             }
-            return (divisor == 0) ? (byte)0 : Convert.ToByte(value / divisor);
+            int gaussed=((divisor == 0) ? 0 : value / divisor);
+            return (byte)gaussed;
         }
     }
 }

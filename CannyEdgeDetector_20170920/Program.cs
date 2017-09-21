@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CannyEdgeDetector_20170920
 {
@@ -10,19 +6,24 @@ namespace CannyEdgeDetector_20170920
     {
         static void Main(string[] args)
         {
-            string OriginalPath = @"01_Original.bmp";
-            string GaussianedPath = @"02_Gaussianed.bmp";
-            string FlatternPath = @"03_Flattern.bmp";
-            string EdgePath = @"04_Edge.bmp";
-            ParseBmp pb = new ParseBmp();
-            pb.LoadBmp(OriginalPath);
-            //pb.RunGaussisanFilter(GaussianedPath);
+            if (args.Length < 2)
+            {
+                PrintUsage();
+                return;
+            }
 
-            //pb.LoadBmp(GaussianedPath);
-            //pb.RunFlattern(FlatternPath);
+            string srcFolderPath = args[0];
+            string dstFolderPath = args[1];
 
-            //pb.LoadBmp(FlatternPath);
-            pb.RunIntencityGradient(EdgePath);
+            RunCannyEdgeDetector r = new RunCannyEdgeDetector(srcFolderPath, dstFolderPath);
+            r.Run();
+        }       
+
+        static void PrintUsage()
+        {
+            Console.WriteLine(">CannyEdgeDetector.exe <InputFolderPath> <OutputFolderPath>");
+            Console.WriteLine("\tInputFolderPath: the folder contains the BMP file before process.");
+            Console.WriteLine("\tOutputFolderPath: the folder contains the BMP file after process.");
         }
     }
 }

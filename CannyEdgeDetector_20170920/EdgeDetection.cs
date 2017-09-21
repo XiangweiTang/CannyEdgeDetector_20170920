@@ -6,100 +6,117 @@ using System.Threading.Tasks;
 
 namespace CannyEdgeDetector_20170920
 {
-    class EdgeDetection
+    class EdgeDetection:ImageProcess
     {
-        byte[,] Matrix;
-        int X, Y;
-        int Depth;
         Dictionary<int, Tuple<int, int>> DirectionDict = new Dictionary<int, Tuple<int, int>>();
-        public Pixel[,] GTMatrix { get; private set; }
-
-        public byte[,] EdgeMatrix;
-        public int[,] AuxMatrix;
-
-
-        public EdgeDetection(byte[,] matrix, int depth)
+        private Pixel[,] GTMatrix;
+        
+        public EdgeDetection(string inputPath, string outputPath):base(inputPath,outputPath)
         {
-            Matrix = matrix;
-            Depth = depth;
-            Init();
         }
-        private void Init()
+
+        protected override void Init()
         {
-            X = Matrix.GetLength(0);
-            Y = Matrix.GetLength(1);
+            // The rounded edge direction angle.
+            // 0: 0 degree against y-axis.
+            // 1: 45 degrees against y-axis.
+            // 2: 90 degrees against y-axis.
+            // 3: 135 degrees agains y-axis.
             DirectionDict.Add(0, new Tuple<int, int>(1, 0));
             DirectionDict.Add(1, new Tuple<int, int>(1, 1));
             DirectionDict.Add(2, new Tuple<int, int>(0, 1));
             DirectionDict.Add(3, new Tuple<int, int>(1, -1));
-            GTMatrix = new Pixel[X, Y / Depth];
-            AuxMatrix = new int[X, Y / Depth];
-            EdgeMatrix = new byte[X, Y];
+            GTMatrix = new Pixel[X, Y];     
         }
 
-        public void RunEdgeDetection()
+        /// <summary>
+        /// Run edge detector.
+        /// 1. Find the intensity gradient for all the pixels.
+        /// 2. Run non-maximum suppression.
+        /// </summary>
+        protected override void Run()
         {
-            SetGTMatrix();
+            SetIGMatrix();
             NonMaxSuppression();
         }
-
-        private void SetGTMatrix()
+        
+        /// <summary>
+        /// Set the intensity gradient for all pixels.
+        /// </summary>
+        private void SetIGMatrix()
         {
             for(int i = 0; i < X; i++)
             {
-                for(int j = 0; j < Y / Depth; j++)
+                for(int j = 0; j < Y ; j++)
                 {
-                    GTMatrix[i, j] = SetGradient(i, j);
+                    GTMatrix[i, j] = SetIntensityGradient(i, j);
                 }
             }
         }
 
-        private Pixel SetGradient(int i, int j)
-        {
+        /// <summary>
+        /// Set the intensity gradient of a certain pixel.
+        /// </summary>
+        /// <param name="i">i-Coordinate</param>
+        /// <param name="j">j-Coordinate</param>
+        /// <returns></returns>
+        private Pixel SetIntensityGradient(int i, int j)
+        {   
+            // Current value
             int current = Matrix[i, j * Depth];
+            // Neigbor value of x-direction and y-direction
             int nextX = i + 1 < X ? Matrix[i + 1, j * Depth] : current;
             int nextY = (j + 1) * Depth < Y ? Matrix[i, (j + 1) * Depth] : current;
+            // Gradient of x and y direction
             int gx = nextX - current;
             int gy = nextY - current;
             Pixel p = new Pixel(gx, gy);
             return p;
         }
 
+        /// <summary>
+        /// Run non max suppression on all pixels.
+        /// </summary>
         private void NonMaxSuppression()
         {
             for (int i = 0; i < X; i++)
             {
-                for (int j = 0; j * Depth < Y; j++)
+                for (int j = 0; j < Y; j++)
                 {
+                    // If the current value is the local max, then return 0xff(white), otherwise 0x00(black)
                     byte value = (byte)(LocalMax(i, j) ? 0xff : 0x00);
-                    AuxMatrix[i, j] = GTMatrix[i, j].T;
                     for (int d = 0; d < Depth; d++)
                     {
-                        EdgeMatrix[i, j * Depth + d] = value;
+                        ProcessedMatrix[i, j * Depth + d] = value;
                     }
                 }
             }
         }
-        
+
+        /// <summary>
+        /// Check if a certain pixel is local max.
+        /// </summary>
+        /// <param name="i">i-Coordinate</param>
+        /// <param name="j">j-Coordinate</param>
+        /// <returns>If pixel [i, j] is local max</returns>
         private bool LocalMax(int i, int j)
         {
             var current = GTMatrix[i, j];
-            if (current.T == 4)
-                return false;
             int xVector = DirectionDict[current.T].Item1;
             int yVector = DirectionDict[current.T].Item2;
-            if (!(Common.Valid(i + xVector, X) && Common.Valid(j + yVector, Y / Depth)))
+
+            // If the neigbor pixel doesn't exists, then return false.
+            if (!(Common.Valid(i + xVector, X) && Common.Valid(j + yVector, Y)))
                 return false;
-            if (!(Common.Valid(i - xVector, X) && Common.Valid(j - yVector, Y / Depth)))
+            if (!(Common.Valid(i - xVector, X) && Common.Valid(j - yVector, Y)))
                 return false;
 
+            // Get the current value and the value on left/right side of the current vector.
             double leftValue = GTMatrix[i + xVector, j + yVector].G;
             double rightValue = GTMatrix[i - xVector, j - yVector].G;
             double currentValue = GTMatrix[i, j].G;
-
-            bool max= (currentValue > leftValue) && (currentValue > rightValue);
             
-            return max;
-        }
+            return (currentValue > leftValue) && (currentValue > rightValue);
+        }        
     }
 }

@@ -6,32 +6,25 @@ using System.Threading.Tasks;
 
 namespace CannyEdgeDetector_20170920
 {
-    class Flattern
-    {
-        byte[,] Matrix;
-        int X, Y;
-        int Depth;
-        public byte[,] FlatternMatrix;
-
-        public Flattern(byte[,] matrix, int depth)
+    // This class is to change 24 bit bit map into 25-bit "grey scale".
+    class Flatten:ImageProcess
+    {        
+        public Flatten(string inputPath, string outputPath):base(inputPath,outputPath)
         {
-            Matrix = matrix;
-            Depth = depth;
-            Init();
         }
 
-        private void Init()
+        protected override void Init()
         {
-            X = Matrix.GetLength(0);
-            Y = Matrix.GetLength(1);
-            FlatternMatrix = new byte[X, Y];
         }
 
-        public void RunFlattern()
+        /// <summary>
+        /// GREY=(R+G+B)/3
+        /// </summary>
+        protected override void Run()
         {
             for(int x = 0; x < X; x++)
             {
-                for(int y = 0; y * Depth < Y ; y ++)
+                for(int y = 0; y < Y ; y ++)
                 {
                     int sum = 0;
                     for(int d = 0; d < Depth; d++)
@@ -41,7 +34,7 @@ namespace CannyEdgeDetector_20170920
                     byte avg = (byte)((sum / Depth));
                     for(int d = 0; d < Depth; d++)
                     {
-                        FlatternMatrix[x, y*Depth + d] = avg;
+                        ProcessedMatrix[x, y*Depth + d] = avg;
                     }
                 }
             }
