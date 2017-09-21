@@ -16,12 +16,12 @@ namespace CannyEdgeDetector_20170920
             string EdgePath = @"04_Edge.bmp";
             ParseBmp pb = new ParseBmp();
             pb.LoadBmp(OriginalPath);
-            pb.RunGaussisanFilter(GaussianedPath);
+            //pb.RunGaussisanFilter(GaussianedPath);
 
-            pb.LoadBmp(GaussianedPath);
-            pb.RunFlattern(FlatternPath);
+            //pb.LoadBmp(GaussianedPath);
+            //pb.RunFlattern(FlatternPath);
 
-            pb.LoadBmp(FlatternPath);
+            //pb.LoadBmp(FlatternPath);
             pb.RunIntencityGradient(EdgePath);
         }
     }

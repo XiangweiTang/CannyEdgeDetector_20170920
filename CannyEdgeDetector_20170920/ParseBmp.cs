@@ -83,7 +83,12 @@ namespace CannyEdgeDetector_20170920
             EdgeDetection ed = new EdgeDetection(Matrix, Depth);
             ed.RunEdgeDetection();
             var newContent = Merge(ed.EdgeMatrix);
-            var newBytes = Header.Concat(newContent);
+
+            byte[] array = new byte[Content.Length];
+            int length = Math.Min(array.Count(), newContent.Count());
+            Array.Copy(newContent.ToArray(), array, length);
+            
+            var newBytes = Header.Concat(array);
             Common.WriteBmp(newBytes, outputPath);
         }
     }

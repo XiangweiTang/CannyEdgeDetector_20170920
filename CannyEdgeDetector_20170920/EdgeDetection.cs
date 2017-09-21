@@ -15,6 +15,7 @@ namespace CannyEdgeDetector_20170920
         public Pixel[,] GTMatrix { get; private set; }
 
         public byte[,] EdgeMatrix;
+        public int[,] AuxMatrix;
 
 
         public EdgeDetection(byte[,] matrix, int depth)
@@ -32,6 +33,7 @@ namespace CannyEdgeDetector_20170920
             DirectionDict.Add(2, new Tuple<int, int>(0, 1));
             DirectionDict.Add(3, new Tuple<int, int>(1, -1));
             GTMatrix = new Pixel[X, Y / Depth];
+            AuxMatrix = new int[X, Y / Depth];
             EdgeMatrix = new byte[X, Y];
         }
 
@@ -70,6 +72,7 @@ namespace CannyEdgeDetector_20170920
                 for (int j = 0; j * Depth < Y; j++)
                 {
                     byte value = (byte)(LocalMax(i, j) ? 0xff : 0x00);
+                    AuxMatrix[i, j] = GTMatrix[i, j].T;
                     for (int d = 0; d < Depth; d++)
                     {
                         EdgeMatrix[i, j * Depth + d] = value;
@@ -81,6 +84,8 @@ namespace CannyEdgeDetector_20170920
         private bool LocalMax(int i, int j)
         {
             var current = GTMatrix[i, j];
+            if (current.T == 4)
+                return false;
             int xVector = DirectionDict[current.T].Item1;
             int yVector = DirectionDict[current.T].Item2;
             if (!(Common.Valid(i + xVector, X) && Common.Valid(j + yVector, Y / Depth)))
@@ -92,7 +97,9 @@ namespace CannyEdgeDetector_20170920
             double rightValue = GTMatrix[i - xVector, j - yVector].G;
             double currentValue = GTMatrix[i, j].G;
 
-            return (currentValue > leftValue) && (currentValue > rightValue);
+            bool max= (currentValue > leftValue) && (currentValue > rightValue);
+            
+            return max;
         }
     }
 }

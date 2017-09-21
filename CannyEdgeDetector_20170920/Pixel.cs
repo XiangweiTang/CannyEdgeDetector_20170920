@@ -20,7 +20,7 @@ namespace CannyEdgeDetector_20170920
         private void Set()
         {
             G = Math.Sqrt(Gx * Gx + Gy * Gy);
-            double t = Math.Atan2(Gy, Gx);
+            double t = (Gx == 0 && Gy == 0) ? 4 : Math.Atan2(Gy, Gx);
             if (t < 0)
                 t += Math.PI;
             T = (int)Math.Round(t * 4 / (Math.PI));
