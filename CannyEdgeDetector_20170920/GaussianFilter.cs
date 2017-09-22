@@ -45,7 +45,7 @@ namespace CannyEdgeDetector_20170920
             {
                 for(int y = -2; y <= 2; y++)
                 {
-                    if (Common.Valid(i + x, X) && Common.Valid(j + y * Depth, Y * Depth))
+                    if (Common.IndexValidation(i + x, X) && Common.IndexValidation(j + y * Depth, Y * Depth))
                     {
                         int neigborValue = Matrix[i + x, j + y * Depth];
                         int maskValue = Common.MaskMatrix[2 - x, 2 - y];

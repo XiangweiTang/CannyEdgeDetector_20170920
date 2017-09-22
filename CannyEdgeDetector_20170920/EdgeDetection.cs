@@ -106,9 +106,9 @@ namespace CannyEdgeDetector_20170920
             int yVector = DirectionDict[current.T].Item2;
 
             // If the neigbor pixel doesn't exists, then return false.
-            if (!(Common.Valid(i + xVector, X) && Common.Valid(j + yVector, Y)))
+            if (!(Common.IndexValidation(i + xVector, X) && Common.IndexValidation(j + yVector, Y)))
                 return false;
-            if (!(Common.Valid(i - xVector, X) && Common.Valid(j - yVector, Y)))
+            if (!(Common.IndexValidation(i - xVector, X) && Common.IndexValidation(j - yVector, Y)))
                 return false;
 
             // Get the current value and the value on left/right side of the current vector.

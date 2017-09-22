@@ -9,6 +9,9 @@ namespace CannyEdgeDetector_20170920
 {
     static class Common
     {
+        /// <summary>
+        /// Time is limited, use a fixed Gaussian filter.
+        /// </summary>
         public static int[,] MaskMatrix = new int[,]
         {
             { 2,4,5,4,2 },
@@ -18,6 +21,11 @@ namespace CannyEdgeDetector_20170920
             { 2,4,5,4,2 }
         };
 
+        /// <summary>
+        /// Read a bmp file, get the bytes.
+        /// </summary>
+        /// <param name="bmpPath">The bmp file path</param>
+        /// <returns>The byte array of the bmp file.</returns>
         public static byte[] ReadBmp(string bmpPath)
         {
             using(FileStream fs=new FileStream(bmpPath,FileMode.Open,FileAccess.Read))
@@ -30,6 +38,11 @@ namespace CannyEdgeDetector_20170920
             }
         }
 
+        /// <summary>
+        /// Write a bmp file to certain path.
+        /// </summary>
+        /// <param name="bmpContent">The bytes need to write into bmp file.</param>
+        /// <param name="bmpPath">The output bmp path.</param>
         public static void WriteBmp(IEnumerable<byte> bmpContent, string bmpPath)
         {
             using(FileStream fs=new FileStream(bmpPath, FileMode.Create, FileAccess.ReadWrite))
@@ -41,7 +54,13 @@ namespace CannyEdgeDetector_20170920
             }
         }
 
-        public static bool Valid(int i, int max)
+        /// <summary>
+        /// Check if an index is valid.
+        /// </summary>
+        /// <param name="i">The index we need to check.</param>
+        /// <param name="max">The max value(length) of the array.</param>
+        /// <returns></returns>
+        public static bool IndexValidation(int i, int max)
         {
             return 0 <= i && i < max;
         }
