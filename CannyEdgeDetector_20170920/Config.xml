@@ -2,5 +2,5 @@
 <Root>
   <SrcFolderPath>C:\Users\v-xianta\Source\Repos\CannyEdgeDetector_20170920\CannyEdgeDetector_20170920\bin\Debug\src</SrcFolderPath>
   <DstFolderPath>C:\Users\v-xianta\Source\Repos\CannyEdgeDetector_20170920\CannyEdgeDetector_20170920\bin\Debug\dst</DstFolderPath>
-  <Threshold>1.1</Threshold>
+  <Threshold>2</Threshold>
 </Root>

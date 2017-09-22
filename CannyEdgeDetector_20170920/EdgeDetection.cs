@@ -61,17 +61,50 @@ namespace CannyEdgeDetector_20170920
         /// <param name="j">j-Coordinate</param>
         /// <returns></returns>
         private Pixel SetIntensityGradient(int i, int j)
-        {   
-            // Current value
-            int current = Matrix[i, j * Depth];
-            // Neigbor value of x-direction and y-direction
-            int nextX = i + 1 < X ? Matrix[i + 1, j * Depth] : current;
-            int nextY = (j + 1) * Depth < Y ? Matrix[i, (j + 1) * Depth] : current;
-            // Gradient of x and y direction
-            int gx = nextX - current;
-            int gy = nextY - current;
-            Pixel p = new Pixel(gx, gy);
+        {
+            //// Current value
+            //int current = Matrix[i, j * Depth];
+            //// Neigbor value of x-direction and y-direction
+            //int nextX = i + 1 < X ? Matrix[i + 1, j * Depth] : current;
+            //int nextY = (j + 1) * Depth < Y ? Matrix[i, (j + 1) * Depth] : current;            
+
+            //// Gradient of x and y direction
+            //int gx = nextX - current;
+            //int gy = nextY - current;
+            double gx = Math.Sqrt(XDiffs(i, j).Select(x => x * x).Sum());
+            double gy = Math.Sqrt(YDiffs(i, j).Select(x => x * x).Sum());
+
+            Pixel p = new Pixel((int)gx, (int)gy);
             return p;
+        }
+
+        private IEnumerable<int> XDiffs(int i, int j)
+        {
+            for(int d = 0; d < Depth; d++)
+            {
+                int currentXIndex = i;
+                int currentYIndex = j * Depth + d;
+
+                int nextXIndex = i + 1;
+                int nextYIndex = j * Depth + d;
+
+                if (Common.IndexValidation(nextXIndex, X))
+                    yield return Matrix[currentXIndex, currentYIndex] - Matrix[nextXIndex, nextYIndex];
+            }
+        }
+
+        private IEnumerable<int> YDiffs(int i, int j)
+        {
+            for(int d = 0; d < Depth; d++)
+            {
+                int currentXIndex = i;
+                int currentYIndex = j * Depth + d;
+
+                int nextXIndex = i;
+                int nextYIndex = (j + 1) * Depth + d;
+                if (Common.IndexValidation(nextYIndex, Y))
+                    yield return Matrix[currentXIndex, currentYIndex] - Matrix[nextXIndex, nextYIndex];
+            }
         }
 
         /// <summary>

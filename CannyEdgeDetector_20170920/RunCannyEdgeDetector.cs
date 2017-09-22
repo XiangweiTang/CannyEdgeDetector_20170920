@@ -49,10 +49,10 @@ namespace CannyEdgeDetector_20170920
             GaussianFilter gf = new GaussianFilter(originalPath, gaussianedPath, Cfg);
             gf.RunImageProcess();
 
-            Flatten f = new Flatten(gaussianedPath, flattenedPath, Cfg);
-            f.RunImageProcess();
+            //Flatten f = new Flatten(gaussianedPath, flattenedPath, Cfg);
+            //f.RunImageProcess();
 
-            EdgeDetection ed = new EdgeDetection(flattenedPath, edgePath, Cfg);
+            EdgeDetection ed = new EdgeDetection(gaussianedPath, edgePath, Cfg);
             ed.RunImageProcess();
         }
     }
